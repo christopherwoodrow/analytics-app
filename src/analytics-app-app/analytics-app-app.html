@@ -1,13 +1,45 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/paper-styles/paper-styles.html">
+
 
 <dom-module id="analytics-app-app">
   <template>
     <style>
       :host {
         display: block;
+        height: 1000px;
       }
+
+      paper-header-panel {
+        height: 120px;
+        padding: 12px;
+        @apply(--shadow-elevation-2dp);
+        background-color: #efeede;
+      }
+      .paper-header {
+        height: 60px;
+        font-size: 16px;
+        line-height: 60px;
+        padding: 0 10px;
+        color: white;
+        transition: height 0.2s;
+      }
+      .content {
+        font-size: 14px;
+        padding: 0 10px;
+        transition: height 0.2s;
+      }
+
     </style>
-    <h2>Hello [[prop1]]</h2>
+
+    <paper-header-panel mode="waterfall-tall" class="pink">
+      <div class="paper-header"><img src="/assets/logo.png"></div>
+      <div class="content">[[prop1]]</div>
+    </paper-header-panel>
+
+    
   </template>
 
   <script>
@@ -18,7 +50,7 @@
       properties: {
         prop1: {
           type: String,
-          value: 'analytics-app-app',
+          value: 'Analytics Technology v0.0.1',
         },
       },
 

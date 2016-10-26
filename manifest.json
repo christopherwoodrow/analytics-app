@@ -1,0 +1,7 @@
+{
+  "name": "analytics-app",
+  "short_name": "analytics-app",
+  "description": "analytics technology",
+  "start_url": "/",
+  "display": "standalone"
+}

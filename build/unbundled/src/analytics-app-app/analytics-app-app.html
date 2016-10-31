@@ -1,0 +1,308 @@
+<html><head><link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="../../bower_components/vaadin-charts/vaadin-line-chart.html">
+
+
+
+
+</head><body><dom-module id="analytics-app-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+        height: 500px;
+        font-family: roboto;
+        margin: 122px 0px 0px 0px;
+        padding-bottom: 600px;
+      }
+
+      paper-header-panel {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%; 
+        height: 80px;
+        padding: 12px;
+        @apply(--shadow-elevation-2dp);
+        background-color: #efeede;
+      }
+      .paper-header {
+        height: 60px;
+        font-size: 16px;
+        line-height: 60px;
+        padding: 0 10px;
+        color: white;
+        transition: height 0.2s;
+      }
+      .content {
+        font-size: 14px;
+        padding: 0 10px;
+        transition: height 0.2s;
+      }
+
+      paper-card {
+        display: flex;
+        margin: 18px 0 0;
+        padding: 18px
+      }
+
+      .year-select {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 0px;
+        padding: 18px;
+        z-index: 1;
+      }
+
+      paper-slider {
+        width: 90%;
+      }
+
+      .chart {
+        position: relative;
+        height: 400px;
+        overflow: scroll;
+      }
+
+      .yeartag {
+        z-index: 1;
+        border-radius: 4px;
+        padding: 4px;
+        margin: 0px;
+        background: #eee;
+        height: 20px;
+      }
+
+      .title {
+        z-index: 1;
+        width: 100%;
+        padding: 12px;
+        border-radius: 6px;
+        top: 28px;
+        height: 75%;
+        left: -12px;
+        position: relative; 
+        transition: all 0.4s ease-in-out;
+        opacity: 0.4;
+      }
+
+      vaadin-line-chart {
+        position: absolute;
+        height: 380px;
+        width: 1200px;
+      }
+
+      .analysis {
+        display: flex;
+        flex-flow: column wrap;
+      }
+
+      .quant {
+        padding: 18px;
+      }
+
+      .qual {
+        padding: 18px;
+      }
+
+      hr {
+        width: 100%;
+        border-bottom: solid 1px #eee;
+        border-style: ridge;
+
+      }
+
+      .copy {
+        background: #eee;
+        border-radius: 6px;
+        padding: 18px;
+        
+      }
+
+      div.copy {
+        transition: all 0.2s ease-in-out;
+      }
+
+      .risk {
+        padding: 12px;
+        border-radius: 6px;
+        margin-left: 4px; 
+        transition: all 0.2s ease-in-out;
+      }
+
+      .normal {
+        background: rgba(0,0,255,0.38);
+      }
+
+      .low {
+        background: rgba(0,255,0,0.38);
+      }
+
+      .high {
+        background: rgba(255,0,0,0.38);
+      }
+
+      .footer {
+        color: #ddd;
+        text-align: center;
+        padding: 180px 10px;
+      }
+
+
+    </style>
+
+    <paper-header-panel mode="waterfall-tall" class="pink">
+      <div class="paper-header"><img src="/assets/logo.png"></div>
+      <div class="content">[[prop1]]</div>
+    </paper-header-panel>
+
+
+
+    <paper-card class="chart">
+      <p class="yeartag">{{year}}</p>
+      <p id="backdrop" class$="title [[riskLevel]]"></p>
+
+      <vaadin-line-chart>
+      <chart-title>Risk Analysis</chart-title>
+        <data-series name="Yeild">
+          <data id="data-points">
+            [[seriesData]]
+          </data>
+        </data-series>
+      </vaadin-line-chart>
+
+    </paper-card>
+
+    <paper-card class="year-select" elevation="3">  
+      <p>Timeline</p>
+      <paper-slider id="years" pin="" snaps="" min="2012" max="2016" max-markers="4" step="1" value="{{year::change}}"></paper-slider>
+      <p>{{year}}</p>
+    </paper-card>
+
+    <paper-card class="analysis quant">
+      <h3>Quantative Analysis</h3>
+      <p>Year: {{year}}</p>
+      <hr>
+      <p>Data series: [[seriesData]]</p>
+      <p>SCORE: <span class="score">[[score]]</span></p>
+      <p>RISK: <span class$="risk [[riskLevel]]">[[risk]]</span></p>
+    </paper-card>
+
+    <paper-card class="analysis qual">
+      <h3>Qualitative Analysis</h3>
+      <p>Year: {{year}}</p>
+      <hr>
+      <div class="copy">[[copy]]</div>
+    </paper-card>
+
+    <p class="footer">Prototype - C Woodrow 2016.</p>
+
+    
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'analytics-app-app',
+
+      properties: {
+        prop1: {
+          type: String,
+          value: 'Analytics Technology v0.0.1',
+        },
+        year: {
+          type: Number,
+          value: 2016,
+          observer: "_yearChanged"
+        },
+        seriesData: {
+          type: Array,
+          value: [17,23,10,19,22,21,27,29]
+        },
+        score: {
+          type: Number
+        },
+        risk: {
+          type: Number
+        },
+        copy: {
+          type: String
+        },
+        riskLevel: {
+          type: String,
+          observer: "_titleFade",
+          reflectToAttribute: true
+        }
+      },
+
+      _yearChanged: function() {   
+        var element = document.getElementById('backdrop');
+
+          setTimeout(function() {
+            element.style.opacity = "0.4";
+          }, 1000);
+
+          setTimeout(function() {
+            element.style.opacity = "0";
+          }, 1600);
+
+        if (this.year == 2012){
+          this.seriesData = [100,92,43,34,42,65];
+          this.score = this.seriesData.reduce(this.getSum);
+          this.risk = 100 - this.score / 6;
+          this.copy = "This chart demonstrates most expected features, and is therefore indicative of a normal risk level.";
+          this.riskLevel = "normal";
+
+        } else if (this.year == 2013) {
+          this.seriesData = [41,20,33,34,22,21];
+          this.score = this.seriesData.reduce(this.getSum);
+          this.risk = 100 - this.score / 6;
+          this.copy = "This chart demonstrates highly irregular features, and is therefore indicative of a high risk level.";
+          this.riskLevel = "high";
+
+        } else if (this.year == 2014) {
+          this.seriesData = [47,49,56,66,60,67];
+          this.score = this.seriesData.reduce(this.getSum);
+          this.risk = 100 - this.score / 6;
+          this.copy = "This chart demonstrates most expected features, and is therefore indicative of a normal risk level.";
+          this.riskLevel = "normal";
+
+        } else if (this.year == 2015) {
+          this.seriesData = [21,50,33,14,42,17];
+          this.score = this.seriesData.reduce(this.getSum);
+          this.risk = 100 - this.score / 6;
+          this.copy = "This chart demonstrates highly irregular features, and is therefore indicative of a high risk level.";
+          this.riskLevel = "high";
+
+        } else if (this.year == 2016) {
+          this.seriesData = [67,77,65,99,118,167];
+          this.score = this.seriesData.reduce(this.getSum);
+          this.risk = 100 - this.score / 6;
+          this.copy = "This chart demonstrates reassuring features, and is therefore indicative of a low risk level.";
+          this.riskLevel = "low";
+
+        };
+      },
+
+      getSum: function(total, num) {
+        return total + num;
+      },
+
+      _titleFade() {
+          
+           
+      }
+
+    });
+
+  </script>
+</dom-module>
+</body></html>

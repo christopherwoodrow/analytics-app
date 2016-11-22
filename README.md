@@ -1,6 +1,6 @@
 # \<analytics-app\>
 
-analytics technology
+Main component file can be found under src/analytics-app-app/analytics-app-app.html
 
 ## Install the Polymer-CLI
 
